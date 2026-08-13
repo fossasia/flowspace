@@ -19,10 +19,38 @@ export const conferenceOptions = {
   /** Always use JVB — P2P breaks replaceTrack / remote media in LoungeMesh. */
   p2p: { enabled: false },
   /**
-   * Single video encoding per sender. Simpler and reliable for LoungeMesh tiles;
-   * avoids simulcast setParameters edge cases across Chrome/Firefox.
+   * Simulcast gives the bridge several encodings to choose between. Without it
+   * there is only one, so JVB has to push the *lowest* constraint any receiver
+   * asked for back onto the sender — one participant on a small tile then
+   * degrades the stream for everyone, and a screen share drops to tile
+   * resolution. Keep it on so the bridge can drop layers per receiver instead.
    */
-  disableSimulcast: true,
-  channelLastN: 16,
-  enableLayerSuspension: false,
+  disableSimulcast: false,
+  /**
+   * Cap on simultaneously forwarded video sources. 9 matches the classic Jitsi
+   * deployment and keeps decode cost sane on a ~12 person team; screen shares
+   * are budgeted on top of this in buildReceiverConstraints.
+   */
+  channelLastN: 9,
+  /** Let the bridge stop sending higher layers for tiles nobody is looking at. */
+  enableLayerSuspension: true,
+  /**
+   * AV1 and VP9 cost far less bandwidth than VP8 at the same resolution, which
+   * matters most on constrained links where the bridge would otherwise suspend
+   * streams outright. H264 stays last as the universal fallback.
+   */
+  videoQuality: {
+    codecPreferenceOrder: ['AV1', 'VP9', 'VP8', 'H264'],
+    mobileCodecPreferenceOrder: ['VP8', 'VP9', 'H264', 'AV1'],
+  },
+};
+
+/**
+ * Desktop capture constraints. A shared screen is mostly static text, so frame
+ * rate buys very little while costing a lot of encode CPU and bitrate — the
+ * classic Jitsi deployment caps it the same way.
+ */
+export const desktopSharingConstraints = {
+  frameRate: { min: 5, max: 15 },
+  maxHeight: 1080,
 };
