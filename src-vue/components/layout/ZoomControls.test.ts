@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { mountWithApp } from '@/test/mountApp';
 import { useLocalStore } from '@/stores/localStore';
+import { useSessionFeaturesStore } from '@/stores/sessionFeaturesStore';
 import ZoomControls from './ZoomControls.vue';
 
 describe('ZoomControls', () => {
@@ -25,6 +26,18 @@ describe('ZoomControls', () => {
     const strip = wrapper.find('.zoomCtl');
     await strip.trigger('pointerdown');
     await strip.trigger('click');
+    wrapper.unmount();
+  });
+
+  it('toggles grid view', async () => {
+    const features = useSessionFeaturesStore();
+    const { wrapper } = await mountWithApp(ZoomControls);
+    const buttons = wrapper.findAll('button.ibtn');
+    expect(buttons[2].attributes('aria-label')).toBe('Grid view');
+    await buttons[2].trigger('click');
+    expect(features.gridView).toBe(true);
+    await buttons[2].trigger('click');
+    expect(features.gridView).toBe(false);
     wrapper.unmount();
   });
 });
