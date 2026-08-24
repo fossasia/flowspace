@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useLocalStore } from '@/stores/localStore';
+import { useSessionFeaturesStore } from '@/stores/sessionFeaturesStore';
 import { applyZoomStep, clampedPanZoom } from '@/constants/panZoom';
 import { viewportChrome, visibleViewport } from '@/constants/pan';
 import IconButton from '@/components/ui/IconButton.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
 
 const local = useLocalStore();
+const features = useSessionFeaturesStore();
 const ZOOM_STEP = 0.12;
 
 function anchor() {
@@ -38,6 +40,14 @@ function zoomOut() {
     </IconButton>
     <IconButton label="Zoom out" ghost @click.stop="zoomOut">
       <template #icon><AppIcon name="minus" /></template>
+    </IconButton>
+    <IconButton
+      :label="features.gridView ? 'Exit grid view' : 'Grid view'"
+      ghost
+      :active="features.gridView"
+      @click.stop="features.gridView = !features.gridView"
+    >
+      <template #icon><AppIcon name="layout-grid" /></template>
     </IconButton>
   </div>
 </template>
