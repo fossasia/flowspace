@@ -40,4 +40,11 @@ describe('ZoomControls', () => {
     expect(features.gridView).toBe(false);
     wrapper.unmount();
   });
+
+  it('hides the grid toggle when showGrid is false', async () => {
+    const { wrapper } = await mountWithApp(ZoomControls, { props: { showGrid: false } });
+    const labels = wrapper.findAll('button.ibtn').map((b) => b.attributes('aria-label'));
+    expect(labels).toEqual(['Zoom in', 'Zoom out']);
+    wrapper.unmount();
+  });
 });

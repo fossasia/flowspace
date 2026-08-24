@@ -6,6 +6,7 @@ import { viewportChrome, visibleViewport } from '@/constants/pan';
 import IconButton from '@/components/ui/IconButton.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
 
+const props = withDefaults(defineProps<{ showGrid?: boolean }>(), { showGrid: true });
 const local = useLocalStore();
 const features = useSessionFeaturesStore();
 const ZOOM_STEP = 0.12;
@@ -42,6 +43,7 @@ function zoomOut() {
       <template #icon><AppIcon name="minus" /></template>
     </IconButton>
     <IconButton
+      v-if="props.showGrid"
       :label="features.gridView ? 'Exit grid view' : 'Grid view'"
       ghost
       :active="features.gridView"
