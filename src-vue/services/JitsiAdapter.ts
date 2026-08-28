@@ -1,5 +1,5 @@
 import { getConnectionOptions } from '@/config/connectionOptions';
-import { desktopSharingConstraints, jitsiInitOptions } from '@/config/jitsiOptions';
+import { jitsiInitOptions } from '@/config/jitsiOptions';
 import { conferenceErrorDetail } from '@/services/conferenceErrorDetail';
 import { secureConferenceName } from '@/utils/secureConferenceName';
 import type { JitsiConference, JitsiMeetJS, JitsiTrack, ReceiverConstraints } from '@/types/jitsi';
@@ -349,20 +349,12 @@ export class JitsiAdapter implements MediaService {
     this.init();
     const options = { firePermissionPromptIsShownEvent: true };
     if (devices.includes('desktop')) {
+      // Do not set desktopSharingFrameRate. max > 5 tells Chrome to prefer fps
+      // over resolution and turns on screenshare simulcast, so JVB forwards a
+      // low layer (jitsi-meet#15611 / #14884). Unset = sharp share at ~5 fps.
       return this.jsMeet!.createLocalTracks({
         devices: ['desktop'],
         desktopSharingSources: ['screen', 'window', 'tab'],
-        // Uncapped, the browser captures a 4K screen at up to 60fps and encodes
-        // it in a single pass, which stutters on modest hardware and starves
-        // every receiver. Screen content is mostly static, so trading frame rate
-        // for resolution is what keeps shared text readable.
-        desktopSharingFrameRate: desktopSharingConstraints.frameRate,
-        constraints: {
-          video: {
-            frameRate: desktopSharingConstraints.frameRate,
-            height: { max: desktopSharingConstraints.maxHeight },
-          },
-        },
         ...options,
       } as any);
     }

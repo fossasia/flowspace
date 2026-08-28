@@ -31,15 +31,6 @@ describe('ScreenshareButton', () => {
     expect(getJitsiTestContext().jsMeet.createLocalTracks).toHaveBeenCalledWith({
       devices: ['desktop'],
       desktopSharingSources: ['screen', 'window', 'tab'],
-      // Screen capture is capped so a 4K screen at 60fps cannot saturate the
-      // encoder and starve every receiver.
-      desktopSharingFrameRate: { min: 5, max: 15 },
-      constraints: {
-        video: {
-          frameRate: { min: 5, max: 15 },
-          height: { max: 1080 },
-        },
-      },
       firePermissionPromptIsShownEvent: true,
     });
     expect(addSpy).toHaveBeenCalled();

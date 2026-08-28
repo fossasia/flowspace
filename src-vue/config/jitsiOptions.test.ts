@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  conferenceNameDefault,
-  conferenceOptions,
-  desktopSharingConstraints,
-  jitsiInitOptions,
-} from './jitsiOptions';
+import { conferenceNameDefault, conferenceOptions, jitsiInitOptions } from './jitsiOptions';
 
 describe('jitsiOptions', () => {
   it('exports loungemesh defaults', () => {
@@ -23,8 +18,10 @@ describe('jitsiOptions', () => {
     expect(conferenceOptions.enableLayerSuspension).toBe(true);
   });
 
-  it('caps desktop capture so a shared 4K screen cannot saturate the encoder', () => {
-    expect(desktopSharingConstraints.frameRate).toEqual({ min: 5, max: 15 });
-    expect(desktopSharingConstraints.maxHeight).toBe(1080);
+  it('prefers VP9 over AV1 so long-haul links do not freeze tiles', () => {
+    expect(conferenceOptions.videoQuality).toEqual({
+      codecPreferenceOrder: ['VP9', 'VP8', 'H264', 'AV1'],
+      mobileCodecPreferenceOrder: ['VP8', 'VP9', 'H264', 'AV1'],
+    });
   });
 });

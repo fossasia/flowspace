@@ -35,22 +35,13 @@ export const conferenceOptions = {
   /** Let the bridge stop sending higher layers for tiles nobody is looking at. */
   enableLayerSuspension: true,
   /**
-   * AV1 and VP9 cost far less bandwidth than VP8 at the same resolution, which
-   * matters most on constrained links where the bridge would otherwise suspend
-   * streams outright. H264 stays last as the universal fallback.
+   * VP9 (KSVC) and VP8 recover cleanly under loss and packet reordering on
+   * long-haul links. AV1 is cheaper per pixel but its dependency descriptor
+   * freezes tiles on those paths, so it stays last-resort. H264 is the
+   * universal fallback.
    */
   videoQuality: {
-    codecPreferenceOrder: ['AV1', 'VP9', 'VP8', 'H264'],
+    codecPreferenceOrder: ['VP9', 'VP8', 'H264', 'AV1'],
     mobileCodecPreferenceOrder: ['VP8', 'VP9', 'H264', 'AV1'],
   },
-};
-
-/**
- * Desktop capture constraints. A shared screen is mostly static text, so frame
- * rate buys very little while costing a lot of encode CPU and bitrate — the
- * classic Jitsi deployment caps it the same way.
- */
-export const desktopSharingConstraints = {
-  frameRate: { min: 5, max: 15 },
-  maxHeight: 1080,
 };

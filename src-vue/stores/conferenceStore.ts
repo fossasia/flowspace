@@ -234,6 +234,7 @@ export const useConferenceStore = defineStore('conference', {
       this.clearJoinState();
       this.messages = [];
       this.error = undefined;
+      this.connectionInterrupted = false;
       useSessionFeaturesStore().resetForLeave();
     },
   },
