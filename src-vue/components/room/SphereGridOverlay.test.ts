@@ -51,6 +51,22 @@ describe('SphereGridOverlay', () => {
     wrapper.unmount();
   });
 
+  it('renders remote cameras with GridTileVideo instead of the bubble player', async () => {
+    const local = useLocalStore();
+    const conference = useConferenceStore();
+    local.setMyID('me');
+    local.pos = { x: 0, y: 0 };
+    local.cameraOff = false;
+    local.video = makeTrack('video');
+    conference.addUser('near', { _displayName: 'Near' } as never);
+    conference.users.near.pos = { x: 8, y: 8 };
+    conference.users.near.video = makeTrack('video');
+    const { wrapper } = await mountWithApp(SphereGridOverlay);
+    expect(wrapper.findAllComponents({ name: 'GridTileVideo' })).toHaveLength(2);
+    expect(wrapper.findComponent({ name: 'RemoteVideo' }).exists()).toBe(false);
+    wrapper.unmount();
+  });
+
   it('includes a far presenter and ignores non-string avatars', async () => {
     const local = useLocalStore();
     const conference = useConferenceStore();

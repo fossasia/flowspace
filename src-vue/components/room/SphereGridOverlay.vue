@@ -4,7 +4,6 @@ import { useConferenceStore } from '@/stores/conferenceStore';
 import { useLocalStore } from '@/stores/localStore';
 import { useSessionFeaturesStore } from '@/stores/sessionFeaturesStore';
 import { useAuthStore } from '@/stores/authStore';
-import RemoteVideo from '@/components/room/RemoteVideo.vue';
 import UserBackdrop from '@/components/room/overlays/UserBackdrop.vue';
 import GridTileVideo from '@/components/room/GridTileVideo.vue';
 import { sphereGridMembers } from '@/utils/sphereGrid';
@@ -69,11 +68,7 @@ function close() {
             />
           </template>
           <template v-else>
-            <RemoteVideo
-              v-if="remoteVideo(member.id)"
-              :id="member.id"
-              :track="remoteVideo(member.id)"
-            />
+            <GridTileVideo v-if="remoteVideo(member.id)" :track="remoteVideo(member.id)" muted />
             <UserBackdrop
               v-else
               :displayName="member.displayName"
