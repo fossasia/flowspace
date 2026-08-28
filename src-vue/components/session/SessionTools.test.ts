@@ -224,4 +224,17 @@ describe('SessionTools', () => {
     expect(useSessionFeaturesStore().megaphone).toBe(false);
     wrapper.unmount();
   });
+
+  it('toggles grid view locally without a conference command', async () => {
+    const features = useSessionFeaturesStore();
+    const cmdSpy = vi.spyOn(getMediaEngineInstance(), 'sendCommand');
+    const { wrapper } = await mountWithApp(SessionTools);
+    await wrapper.find('[aria-label="Grid view"]').trigger('click');
+    expect(features.gridView).toBe(true);
+    expect(wrapper.find('[aria-label="Exit grid view"]').classes()).toContain('highlight');
+    expect(cmdSpy).not.toHaveBeenCalled();
+    await wrapper.find('[aria-label="Exit grid view"]').trigger('click');
+    expect(features.gridView).toBe(false);
+    wrapper.unmount();
+  });
 });

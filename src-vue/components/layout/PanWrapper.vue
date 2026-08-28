@@ -5,7 +5,7 @@ import { applyZoomStep, clampedPanZoom, wheelScaleDelta } from '@/constants/panZ
 import ZoomControls from '@/components/layout/ZoomControls.vue';
 import ViewportBackground from '@/components/layout/ViewportBackground.vue';
 
-const props = withDefaults(defineProps<{ eventIdentifier?: string; showGrid?: boolean }>(), { showGrid: true });
+const props = defineProps<{ eventIdentifier?: string }>();
 
 const localStore = useLocalStore();
 const isPanning = ref(false);
@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ZoomControls class="zoomCorner" :show-grid="props.showGrid" />
+  <ZoomControls />
   <div
     ref="wrapperRef"
     class="panRoot"
@@ -126,12 +126,5 @@ onMounted(() => {
 }
 .panScale:active {
   cursor: grabbing;
-}
-.zoomCorner {
-  position: fixed;
-  left: 14px;
-  bottom: 96px;
-  z-index: 6000;
-  pointer-events: auto;
 }
 </style>

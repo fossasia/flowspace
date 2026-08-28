@@ -95,6 +95,14 @@ function openPanel(name: 'notes' | 'whiteboard') {
     >
       <template #icon><AppIcon name="megaphone" /></template>
     </IconButton>
+    <IconButton
+      :label="features.gridView ? 'Exit grid view' : 'Grid view'"
+      :highlight="features.gridView"
+      :sound="features.gridView ? 'toggleOff' : 'toggleOn'"
+      @click="features.gridView = !features.gridView"
+    >
+      <template #icon><AppIcon name="layout-grid" /></template>
+    </IconButton>
     <div v-if="features.canUsePoll || features.isHost || features.isModerator" class="toolWrap">
       <IconButton
         label="Poll"

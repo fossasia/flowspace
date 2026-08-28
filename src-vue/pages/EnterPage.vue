@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
 <template>
   <AppHeader />
   <LocalStoreLogic />
-  <PanWrapper :show-grid="false">
+  <PanWrapper>
     <Room>
       <LocalUser />
     </Room>
