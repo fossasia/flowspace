@@ -53,7 +53,7 @@ function close() {
   <div class="sphereGrid" role="dialog" aria-label="People in your sphere">
     <div class="gridHeader">
       <h2>In your sphere</h2>
-      <IconButton label="Close grid view" ghost @click="close">
+      <IconButton label="Close grid view" @click="close">
         <template #icon><AppIcon name="close" /></template>
       </IconButton>
     </div>
@@ -91,7 +91,7 @@ function close() {
 .sphereGrid {
   position: fixed;
   inset: 0;
-  z-index: 5500;
+  z-index: 6500;
   background: var(--color-mono95, #f4f4f7);
   display: flex;
   flex-direction: column;
